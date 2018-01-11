@@ -1,0 +1,9 @@
+language: node_js
+node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: on65TMUhuhz8nedrjDTfc9cPYRU8t98g9UwLFZE8/RHADTOVxFKjjo8FcZCN7XHomYeb74YYitQ9po3URNa+hDY+HgJRJNglUVLRdDy0DKF++/pevNC7LEItrkDBUuurLXi9a/dSOEW6cKibWv9VRM7d9O9kY8ORpsifLLyM8k/mW3Jj6xP8fCfmdRnbCzVxmi3E6gBP9bAHtZ4oF3ytWHKwbpucEXMbl36nlRFAG8cmZHXlk7/a9nLAY6CgxbUjUn/GRZv3J463BmQ4RDRZ7xKsiRGSOyCgqt5+yH179gRP0Gj9TMjB4ArYtzAPAPxCl5Ni8Z0cPjjLvR1lpM9jjB4XiGwTKMmxtkJYAiv/SgFT7nUZ7MN7+coGSc6t+kVbQwV1/ykakzhFIFajkou9txzjVnyUv4Y1uebc97JYwKnjJMTDBnDOvXVHbhnB5Dx+2OZnhTaK2Jp79c4anuza10PKf6cgVAGuyXxRlFxbymgTvpv1fg9MqdgtKTIbnIZdP/UqRGPxR46s1WXE4U966/86QTurkqJ9oN7E9gsq0oIE064SXAQNQBTNj8VRZrur3HsCFm6mBgF/a3E5d7Tx2rB3C9/MOHi6WTt7pfKf7A0gmYVxVJzSsfVM5FV1m+ulIn+/+EdEEFucaOj3XgXlZgfK+JU/KnjYUDcM2dvg2Lw=
+  app: my14ers-api
+  on:
+    repo: amandaherschleb/my-14ers-api

@@ -1,13 +1,15 @@
 {
   "name": "my-14ers-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "my 14ers api",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive",
+    "start": "node server.js",
+    "lint": "eslint ./ --ext .js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Amanda Herschleb",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -16,6 +18,12 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
+    "eslint": "^4.15.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.5.1",
     "mocha": "^4.1.0"
   }
 }
