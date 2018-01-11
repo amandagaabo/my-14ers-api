@@ -4,7 +4,7 @@
   "description": "my 14ers api",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive",
+    "test": "mocha --recursive --exit",
     "start": "node server.js",
     "lint": "eslint ./ --ext .js"
   },
