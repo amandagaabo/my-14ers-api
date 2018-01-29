@@ -26,7 +26,7 @@ const app = express()
   // cors middleware
   .use(cors({ origin: CLIENT_ORIGIN }))
   // router
-  // .use(router);
+  .use(router);
 
 // setup server
 let server;
