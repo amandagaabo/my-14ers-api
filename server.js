@@ -2,11 +2,15 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const router = require('./routes/index');
 const { Client } = require('pg');
 const { CLIENT_ORIGIN, PORT, DATABASE_URL } = require('./config');
+const { Model } = require('objection');
+const knex = require('./knexfile');
 
-// setup app
-const app = express();
+// bind all models to a knex instance
+Model.knex(knex);
 
 // setup database client
 const client = new Client({
@@ -14,14 +18,15 @@ const client = new Client({
   ssl: process.env.NODE_ENV !== 'development'
 });
 
-// log the http layer middleware
-app.use(morgan('common'));
-
-// use cors middleware
-app.use(cors({ origin: CLIENT_ORIGIN }));
-
-
-// setup routes
+// setup app
+const app = express()
+  .use(bodyParser.json())
+  // log the http layer middleware
+  .use(morgan('common'))
+  // cors middleware
+  .use(cors({ origin: CLIENT_ORIGIN }))
+  // router
+  // .use(router);
 
 // setup server
 let server;
@@ -34,7 +39,8 @@ function runServer() {
         console.log(`Your app is listening on port ${PORT}`);
       });
 
-      server.on('error', () => {
+      server.on('error', (err) => {
+        console.error(err);
         client.end();
       });
 
@@ -56,7 +62,7 @@ function closeServer() {
 // if server.js is called directly (aka, with `node server.js`), this block runs
 if (require.main === module) {
   runServer()
-    .then(() => console.log('good to go'))
+    .then(() => console.log('run server called'))
     .catch(err => console.error(err));
 }
 
