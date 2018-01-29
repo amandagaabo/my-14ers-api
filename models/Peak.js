@@ -16,7 +16,7 @@ class Peak extends Model {
 
       properties: {
         id: { type: 'integer' },
-        ownerId: { type: ['integer', 'null'] },
+        userId: { type: ['integer', 'null'] },
         peakName: { type: 'string', minLength: 1 },
         dateClimbed: { type: 'string' },
         notes: { type: 'string' }
