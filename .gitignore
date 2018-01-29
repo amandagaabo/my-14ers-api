@@ -3,3 +3,5 @@
 
 # dev
 .eslintrc.json
+
+.env
