@@ -1,9 +1,9 @@
-const Knex = require('knex');
-
-exports.knex = Knex({
+const knex = require('knex')({
   client: 'pg',
   useNullAsDefault: true,
   connection: {
-    filename: 'my-14ers.db'
+    host: 'localhost'
   }
 });
+
+module.exports = knex;

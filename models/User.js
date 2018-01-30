@@ -1,5 +1,4 @@
 const { Model } = require('objection');
-const Peak = require('./Peak');
 
 class User extends Model {
   // Table name is the only required property.
@@ -25,6 +24,8 @@ class User extends Model {
 
   // This object defines the relations to other models.
   static get relationMappings() {
+    const Peak = require('./Peak');
+
     return {
       peaks: {
         relation: Model.HasManyRelation,

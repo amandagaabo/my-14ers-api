@@ -12,14 +12,46 @@ class Peak extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['peakName', 'dateClimbed'],
+      required: [
+        'peakName',
+        'dateClimbed',
+        'imgSrc',
+        'range',
+        'rank',
+        'elevation',
+        'latitude',
+        'longitude'
+      ],
 
       properties: {
         id: { type: 'integer' },
         userId: { type: ['integer', 'null'] },
         peakName: { type: 'string', minLength: 1 },
         dateClimbed: { type: 'string' },
-        notes: { type: 'string' }
+        notes: { type: 'string' },
+        imgSrc: { type: 'string' },
+        range: { type: 'string' },
+        rank: { type: 'integer' },
+        elevation: { type: 'integer' },
+        latitude: { type: 'number' },
+        longitude: { type: 'number' },
+      }
+    };
+  }
+
+  static get relationMappings() {
+    const User = require('./User');
+
+    return {
+      user: {
+        relation: Model.BelongsToOneRelation,
+        // The related model. This can be either a Model subclass constructor or an
+        // absolute file path to a module that exports one.
+        modelClass: User,
+        join: {
+          from: 'Peak.ownerId',
+          to: 'User.id'
+        }
       }
     };
   }

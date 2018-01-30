@@ -12,12 +12,6 @@ const knex = require('./knexfile');
 // bind all models to a knex instance
 Model.knex(knex);
 
-// setup database client
-const client = new Client({
-  connectionString: DATABASE_URL,
-  ssl: process.env.NODE_ENV !== 'development'
-});
-
 // setup app
 const app = express()
   .use(bodyParser.json())
@@ -32,9 +26,16 @@ const app = express()
 let server;
 
 // connect to database, then start the server
-function runServer() {
+function runServer(databaseUrl = DATABASE_URL) {
+  // setup database client
+  const client = new Client({
+    connectionString: databaseUrl,
+    ssl: process.env.NODE_ENV !== 'development'
+  });
+
   return client.connect()
     .then(() => {
+      console.log('Connected to database', databaseUrl)
       server = app.listen(PORT, () => {
         console.log(`Your app is listening on port ${PORT}`);
       });
@@ -54,7 +55,7 @@ function runServer() {
 function closeServer() {
   return client.end()
     .then(() => {
-      console.log('Closing server');
+      console.log('Database disconnected, closing server');
       server.close();
     });
 }
