@@ -29,7 +29,7 @@ let client;
 // connect to database, then start the server
 function runServer(databaseUrl = DATABASE_URL) {
   // setup database client
-  const client = new Client({
+  client = new Client({
     connectionString: databaseUrl,
     ssl: process.env.NODE_ENV !== 'development'
   });

@@ -1,10 +1,10 @@
-const { DATABASE_URL } = require('./config');
-
 module.exports = {
   development: {
     client: 'postgresql',
     useNullAsDefault: true,
-    connection: DATABASE_URL,
+    connection: {
+      database: 'my-14ers-dev'
+    },
     migrations: {
       directory: './migrations',
       tableName: 'migrations'
@@ -13,7 +13,9 @@ module.exports = {
 
   production: {
     client: 'postgresql',
-    connection: DATABASE_URL,
+    connection: {
+      database: 'my-14ers-production'
+    },
     pool: {
       min: 2,
       max: 10
