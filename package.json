@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive --exit",
-    "start": "node server.js",
+    "migrate": "knex migrate:latest",
+    "start": "npm rn migrate && node server.js",
     "lint": "eslint ./ --ext .js"
   },
   "keywords": [],

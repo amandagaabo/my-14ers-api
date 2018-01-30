@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 describe('peak routes', function () {
   before(() => {
-    console.log('before running')
+    console.log('before');
     return runServer('postgresql://localhost/my-14ers-test')
       .then(() => {
         return User

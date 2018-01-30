@@ -27,14 +27,14 @@ class Peak extends Model {
         id: { type: 'integer' },
         userId: { type: ['integer', 'null'] },
         peakName: { type: 'string', minLength: 1 },
-        dateClimbed: { type: 'string' },
+        dateClimbed: { type: 'date' },
         notes: { type: 'string' },
         imgSrc: { type: 'string' },
         range: { type: 'string' },
         rank: { type: 'integer' },
         elevation: { type: 'integer' },
-        latitude: { type: 'number' },
-        longitude: { type: 'number' },
+        latitude: { type: 'float' },
+        longitude: { type: 'float' },
       }
     };
   }

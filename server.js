@@ -22,8 +22,9 @@ const app = express()
   // router
   .use(router);
 
-// setup server
+// setup server and client
 let server;
+let client;
 
 // connect to database, then start the server
 function runServer(databaseUrl = DATABASE_URL) {
@@ -33,9 +34,12 @@ function runServer(databaseUrl = DATABASE_URL) {
     ssl: process.env.NODE_ENV !== 'development'
   });
 
+  // connect to client
   return client.connect()
     .then(() => {
-      console.log('Connected to database', databaseUrl)
+      console.log('Connected to database', databaseUrl);
+
+      // connect to server
       server = app.listen(PORT, () => {
         console.log(`Your app is listening on port ${PORT}`);
       });
@@ -53,9 +57,11 @@ function runServer(databaseUrl = DATABASE_URL) {
 // this function closes the server and returns a promise
 // used for integration tests
 function closeServer() {
+  // disconnect from client
   return client.end()
     .then(() => {
       console.log('Database disconnected, closing server');
+      // close server
       server.close();
     });
 }
