@@ -7,7 +7,11 @@ const router = require('./routes/index');
 const { Client } = require('pg');
 const { CLIENT_ORIGIN, PORT, DATABASE_URL } = require('./config');
 const { Model } = require('objection');
-const knex = require('./knexfile');
+const Knex = require('knex');
+const knexConfig = require('./knexfile');
+
+// initialize knex
+const knex = Knex(knexConfig.test);
 
 // bind all models to a knex instance
 Model.knex(knex);

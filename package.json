@@ -4,8 +4,9 @@
   "description": "my 14ers api",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive --exit",
+    "seed": "knex seed:run --env test",
     "migrate": "knex migrate:latest",
+    "test": "npm run seed && mocha --recursive --exit",
     "start": "npm run migrate && node server.js",
     "lint": "eslint ./ --ext .js"
   },

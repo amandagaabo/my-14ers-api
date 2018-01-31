@@ -3,7 +3,7 @@ const { Model } = require('objection');
 class User extends Model {
   // Table name is the only required property.
   static get tableName() {
-    return 'User';
+    return 'Users';
   }
 
   // Optional JSON schema. This is not the database schema! Nothing is generated

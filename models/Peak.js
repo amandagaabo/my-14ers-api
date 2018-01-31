@@ -3,7 +3,7 @@ const { Model } = require('objection');
 class Peak extends Model {
   // Table name is the only required property.
   static get tableName() {
-    return 'Peak';
+    return 'Peaks';
   }
 
   // Optional JSON schema. This is not the database schema! Nothing is generated

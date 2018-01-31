@@ -1,9 +1,21 @@
 module.exports = {
   development: {
-    client: 'postgresql',
+    client: 'pg',
     useNullAsDefault: true,
     connection: {
       database: 'my-14ers-dev'
+    },
+    migrations: {
+      directory: './migrations',
+      tableName: 'migrations'
+    }
+  },
+
+  test: {
+    client: 'pg',
+    connection: 'postgres://localhost/my-14ers-test',
+    seeds: {
+      directory: './seeds/test/'
     },
     migrations: {
       directory: './migrations',

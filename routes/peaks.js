@@ -1,21 +1,15 @@
 const Peak = require('../models/Peak');
-const User = require('../models/User');
 
-
+// list all user peaks
 exports.list = (req, res) => {
-  // find user by id
-  return User.query().findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        console.log('no user found');
-        throw createStatusCodeError(404);
-      }
-      // return user peaks
-      return user
-        .query()
-        .skipUndefined()
-        .where('userId', '=', req.query.userId);
-    }).then((peaks) => {
+  return Peak
+    .query()
+    .skipUndefined()
+    .where('userId', req.params.userId)
+    .then((peaks) => {
+      console.log('peaks found', peaks);
+
+      // send user peaks
       res.send(peaks);
     });
 };
