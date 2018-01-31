@@ -8,6 +8,10 @@ const { CLIENT_ORIGIN, PORT } = require('./config');
 const { Model } = require('objection');
 const Knex = require('knex');
 const knexConfig = require('./knexfile');
+const pg = require('pg');
+
+// change decimal type from string to number
+pg.types.setTypeParser(1700, 'text', parseFloat);
 
 // setup database using knex with the current environment
 const knex = Knex(knexConfig[process.env.NODE_ENV]);

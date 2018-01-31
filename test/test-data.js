@@ -16,27 +16,27 @@ const testPeaks = [
     id: 1,
     userId: 1,
     peakName: 'Mt. Elbert',
-    dateClimbed: '07-07-2017',
+    dateClimbed: '2017-07-07T06:00:00.000Z',
     notes: 'it was fun',
     imgSrc: 'https://res.cloudinary.com/amhprojects/image/upload/v1514516749/14ers/mt_elbert.jpg',
     range: 'Sawatch Range',
     rank: 1,
     elevation: 14433,
-    latitude: 39.117777777777775,
-    longitude: -106.44472222222223
+    latitude: 39.11777778,
+    longitude: -106.44472222
   },
   {
     id: 2,
     userId: 1,
     peakName: 'Blanca Peak',
-    dateClimbed: '10-15-2016',
+    dateClimbed: '2016-10-15T06:00:00.000Z',
     notes: 'very cold',
     imgSrc: 'https://res.cloudinary.com/amhprojects/image/upload/v1514516746/14ers/blanca.jpg',
     range: 'Sangre de Cristo',
     rank: 4,
     elevation: 14345,
-    latitude: 37.577222222222225,
-    longitude: -105.48527777777778
+    latitude: 37.57722222,
+    longitude: -105.48527778
   },
   {
     id: 3,
@@ -48,8 +48,8 @@ const testPeaks = [
     range: 'RMNP',
     rank: 4,
     elevation: 14345,
-    latitude: 37.577222222222225,
-    longitude: -105.48527777777778
+    latitude: 37.57722222,
+    longitude: -105.48527778
   }
 ];
 

@@ -33,8 +33,8 @@ class Peak extends Model {
         range: { type: 'string' },
         rank: { type: 'integer' },
         elevation: { type: 'integer' },
-        latitude: { type: 'float' },
-        longitude: { type: 'float' },
+        latitude: { type: 'decimal' },
+        longitude: { type: 'decimal' },
       }
     };
   }

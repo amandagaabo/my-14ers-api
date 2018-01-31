@@ -8,8 +8,7 @@ chai.use(chaiHttp);
 
 describe('peak routes', function () {
   before(() => {
-    console.log('before');
-    return runServer('postgresql://localhost/my-14ers-test');
+    return runServer();
   });
 
   after(() => {
@@ -28,12 +27,12 @@ describe('peak routes', function () {
     });
   });
 
-  describe.skip('GET request to /users/:userId/peaks', function () {
+  describe('GET request to /users/:userId/peaks', function () {
     it('should return user peaks', function () {
       return chai.request(app)
         .get('/users/1/peaks')
-        .end((req, res) => {
-          console.log(res);
+        .then((res) => {
+          res.text.should.equal(JSON.stringify(testPeaks.filter(peak => peak.userId === 1)));
         });
     });
   });

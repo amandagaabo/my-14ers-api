@@ -19,8 +19,8 @@ exports.up = (knex, Promise) => {
         table.string('range').notNull();
         table.integer('rank').notNull();
         table.integer('elevation').notNull();
-        table.float('latitude').notNull();
-        table.float('longitude').notNull();
+        table.decimal('latitude', 12, 8).notNull();
+        table.decimal('longitude', 12, 8).notNull();
       })
   ]);
 };

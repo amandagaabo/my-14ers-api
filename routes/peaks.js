@@ -7,6 +7,6 @@ exports.list = (req, res) => {
     .skipUndefined()
     .where('userId', req.params.userId)
     .then((peaks) => {
-      res.send(peaks);
+      res.send(JSON.stringify(peaks));
     });
 };
