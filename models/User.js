@@ -22,21 +22,21 @@ class User extends Model {
     };
   }
 
-  // This object defines the relations to other models.
-  static get relationMappings() {
-    return {
-      peaks: {
-        relation: Model.HasManyRelation,
-        // The related model. This can be either a Model subclass constructor or an
-        // absolute file path to a module that exports one.
-        modelClass: require('./Peak'),
-        join: {
-          from: 'user.id',
-          to: 'peak.userId'
-        }
-      },
-    };
-  }
+  // // This object defines the relations to other models.
+  // static get relationMappings() {
+  //   return {
+  //     peaks: {
+  //       relation: Model.HasManyRelation,
+  //       // The related model. This can be either a Model subclass constructor or an
+  //       // absolute file path to a module that exports one.
+  //       modelClass: require('./Peak'),
+  //       join: {
+  //         from: 'user.id',
+  //         to: 'peak.userId'
+  //       }
+  //     },
+  //   };
+  // }
 }
 
 module.exports = User;

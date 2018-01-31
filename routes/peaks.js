@@ -1,5 +1,4 @@
 const Peak = require('../models/Peak');
-const User = require('../models/User');
 const uuid = require('uuid/v4');
 
 // list all user peaks
@@ -14,18 +13,24 @@ exports.list = (req, res) => {
 };
 
 exports.create = (req, res) => {
-  const { userId } = req.params;
-  console.log('request body', req.body);
   const newPeak = {
     uuid: uuid(),
-    userId
+    userId: req.params.userId,
+    peakName: req.body.peak_name,
+    dateClimbed: req.body.dateClimbed,
+    notes: req.body.notes || null,
+    imgSrc: req.body.imgSrc,
+    range: req.body.range,
+    rank: req.body.rank,
+    elevation: parseInt(req.body.elevation, 10),
+    latitude: req.body.latitude,
+    longitude: req.body.longitude
   };
 
-  console.log('newPeak', newPeak);
   return Peak
     .query()
     .insert(newPeak)
-    .then(() => {
-      res.status(201);
+    .then((peak) => {
+      res.status(201).send(peak);
     });
 };

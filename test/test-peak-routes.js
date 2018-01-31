@@ -47,7 +47,10 @@ describe('peak routes', function () {
       return chai.request(app)
         .get(`/users/${userId}/peaks`)
         .then((res) => {
-          res.text.should.equal(JSON.stringify(testPeaks.filter(peak => peak.userId === userId)));
+          const userPeaks = testPeaks.filter(peak => peak.userId === userId);
+          res.text.should.contain(userPeaks[0].uuid);
+          res.text.should.contain(userPeaks[1].uuid);
+          res.text.should.not.contain(testPeaks[2].uuid);
         });
     });
   });
@@ -58,7 +61,9 @@ describe('peak routes', function () {
         .post(`/users/${userId}/peaks`)
         .send(newPeak)
         .then((res) => {
-          console.log(res);
+          res.should.have.status(201);
+          res.body.peakName.should.equal(newPeak.peak_name);
+          res.body.dateClimbed.should.equal(newPeak.dateClimbed);
         });
     });
   });

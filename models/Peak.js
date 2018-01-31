@@ -27,7 +27,7 @@ class Peak extends Model {
 
       properties: {
         uuid: { type: 'uuid' },
-        userId: { type: ['uuid', 'null'] },
+        userId: { type: 'uuid' },
         peakName: { type: 'string', minLength: 1 },
         dateClimbed: { type: 'date' },
         notes: { type: 'string' },
@@ -41,20 +41,20 @@ class Peak extends Model {
     };
   }
 
-  static get relationMappings() {
-    return {
-      user: {
-        relation: Model.BelongsToOneRelation,
-        // The related model. This can be either a Model subclass constructor or an
-        // absolute file path to a module that exports one.
-        modelClass: require('./User'),
-        join: {
-          from: 'peak.userId',
-          to: 'user.id'
-        }
-      }
-    };
-  }
+  // static get relationMappings() {
+  //   return {
+  //     user: {
+  //       relation: Model.BelongsToOneRelation,
+  //       // The related model. This can be either a Model subclass constructor or an
+  //       // absolute file path to a module that exports one.
+  //       modelClass: require('./User'),
+  //       join: {
+  //         from: 'peak.userId',
+  //         to: 'user.id'
+  //       }
+  //     }
+  //   };
+  // }
 }
 
 module.exports = Peak;
