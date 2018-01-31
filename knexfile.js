@@ -2,8 +2,9 @@ module.exports = {
   development: {
     client: 'pg',
     useNullAsDefault: true,
-    connection: {
-      database: 'my-14ers-dev'
+    connection: 'postgres://localhost/my-14ers-dev',
+    seeds: {
+      directory: './seeds/test/'
     },
     migrations: {
       directory: './migrations',
@@ -24,10 +25,8 @@ module.exports = {
   },
 
   production: {
-    client: 'postgresql',
-    connection: {
-      database: 'my-14ers-production'
-    },
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
       max: 10

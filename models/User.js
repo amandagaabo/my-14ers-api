@@ -3,7 +3,7 @@ const { Model } = require('objection');
 class User extends Model {
   // Table name is the only required property.
   static get tableName() {
-    return 'Users';
+    return 'users';
   }
 
   // Optional JSON schema. This is not the database schema! Nothing is generated
@@ -24,17 +24,15 @@ class User extends Model {
 
   // This object defines the relations to other models.
   static get relationMappings() {
-    const Peak = require('./Peak');
-
     return {
       peaks: {
         relation: Model.HasManyRelation,
         // The related model. This can be either a Model subclass constructor or an
         // absolute file path to a module that exports one.
-        modelClass: Peak,
+        modelClass: require('./Peak'),
         join: {
-          from: 'User.id',
-          to: 'Peak.ownerId'
+          from: 'user.id',
+          to: 'peak.ownerId'
         }
       },
     };

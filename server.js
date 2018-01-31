@@ -4,16 +4,15 @@ const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const router = require('./routes/index');
-const { Client } = require('pg');
-const { CLIENT_ORIGIN, PORT, DATABASE_URL } = require('./config');
+const { CLIENT_ORIGIN, PORT } = require('./config');
 const { Model } = require('objection');
 const Knex = require('knex');
 const knexConfig = require('./knexfile');
 
-// initialize knex
-const knex = Knex(knexConfig.test);
+// setup database using knex with the current environment
+const knex = Knex(knexConfig[process.env.NODE_ENV]);
 
-// bind all models to a knex instance
+// connect to database by binding all models to a knex instance
 Model.knex(knex);
 
 // setup app
@@ -26,55 +25,23 @@ const app = express()
   // router
   .use(router);
 
-// setup server and client
+// server is used in runServer and closeServer so it is defined out here
 let server;
-let client;
 
-// connect to database, then start the server
-function runServer(databaseUrl = DATABASE_URL) {
-  // setup database client
-  client = new Client({
-    connectionString: databaseUrl,
-    ssl: process.env.NODE_ENV !== 'development'
+function runServer() {
+  return server = app.listen(PORT, () => {
+    console.log(`Your app is listening on port ${PORT}`);
   });
-
-  // connect to client
-  return client.connect()
-    .then(() => {
-      console.log('Connected to database', databaseUrl);
-
-      // connect to server
-      server = app.listen(PORT, () => {
-        console.log(`Your app is listening on port ${PORT}`);
-      });
-
-      server.on('error', (err) => {
-        console.error(err);
-        client.end();
-      });
-
-      // have to return something even if it is null
-      return null;
-    });
 }
 
-// this function closes the server and returns a promise
 // used for integration tests
 function closeServer() {
-  // disconnect from client
-  return client.end()
-    .then(() => {
-      console.log('Database disconnected, closing server');
-      // close server
-      server.close();
-    });
+  server.close();
 }
 
 // if server.js is called directly (aka, with `node server.js`), this block runs
 if (require.main === module) {
-  runServer()
-    .then(() => console.log('run server called'))
-    .catch(err => console.error(err));
+  runServer();
 }
 
 module.exports = { app, runServer, closeServer };

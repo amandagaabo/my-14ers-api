@@ -1,14 +1,14 @@
 exports.up = (knex, Promise) => {
   return Promise.all([
     knex.schema
-      .createTable('Users', (table) => {
+      .createTable('users', (table) => {
         table.increments('id').primary();
 
         table.string('email').notNull();
         table.string('password').notNull();
       })
 
-      .createTable('Peaks', (table) => {
+      .createTable('peaks', (table) => {
         table.increments('id').primary();
 
         table.integer('userId').notNull();
@@ -28,7 +28,7 @@ exports.up = (knex, Promise) => {
 exports.down = (knex, Promise) => {
   return Promise.all([
     knex.schema
-      .dropTableIfExists('Peaks')
-      .dropTableIfExists('Users')
+      .dropTableIfExists('peaks')
+      .dropTableIfExists('users')
   ]);
 };

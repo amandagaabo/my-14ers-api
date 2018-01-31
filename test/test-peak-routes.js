@@ -1,6 +1,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { app, runServer, closeServer } = require('../server');
+const { testUsers, testPeaks } = require('./test-data');
 
 const should = chai.should();
 chai.use(chaiHttp);
@@ -27,7 +28,7 @@ describe('peak routes', function () {
     });
   });
 
-  describe('GET request to /users/:userId/peaks', function () {
+  describe.skip('GET request to /users/:userId/peaks', function () {
     it('should return user peaks', function () {
       return chai.request(app)
         .get('/users/1/peaks')
