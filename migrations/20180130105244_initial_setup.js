@@ -4,6 +4,7 @@ exports.up = (knex, Promise) => {
       .createTable('users', (table) => {
         table.increments('id').primary();
 
+        table.uuid('uuid').notNull();
         table.string('email').notNull();
         table.string('password').notNull();
       })
@@ -11,7 +12,8 @@ exports.up = (knex, Promise) => {
       .createTable('peaks', (table) => {
         table.increments('id').primary();
 
-        table.integer('userId').notNull();
+        table.uuid('uuid').notNull();
+        table.uuid('userId').notNull();
         table.string('peakName').notNull();
         table.date('dateClimbed').notNull();
         table.string('notes').nullable();

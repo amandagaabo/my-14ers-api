@@ -13,6 +13,8 @@ class Peak extends Model {
     return {
       type: 'object',
       required: [
+        'uuid',
+        'userId',
         'peakName',
         'dateClimbed',
         'imgSrc',
@@ -24,8 +26,8 @@ class Peak extends Model {
       ],
 
       properties: {
-        id: { type: 'integer' },
-        userId: { type: ['integer', 'null'] },
+        uuid: { type: 'uuid' },
+        userId: { type: ['uuid', 'null'] },
         peakName: { type: 'string', minLength: 1 },
         dateClimbed: { type: 'date' },
         notes: { type: 'string' },
@@ -47,7 +49,7 @@ class Peak extends Model {
         // absolute file path to a module that exports one.
         modelClass: require('./User'),
         join: {
-          from: 'peak.ownerId',
+          from: 'peak.userId',
           to: 'user.id'
         }
       }

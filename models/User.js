@@ -15,7 +15,7 @@ class User extends Model {
       required: ['email', 'password'],
 
       properties: {
-        id: { type: 'integer' },
+        uuid: { type: 'uuid' },
         email: { type: 'string', minLength: 1 },
         password: { type: 'string', minLength: 8, maxLength: 65 }
       }
@@ -32,7 +32,7 @@ class User extends Model {
         modelClass: require('./Peak'),
         join: {
           from: 'user.id',
-          to: 'peak.ownerId'
+          to: 'peak.userId'
         }
       },
     };
