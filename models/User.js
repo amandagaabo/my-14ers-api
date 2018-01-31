@@ -1,10 +1,9 @@
 const { Model } = require('objection');
-const Peak = require('./Peak');
 
 class User extends Model {
   // Table name is the only required property.
   static get tableName() {
-    return 'User';
+    return 'users';
   }
 
   // Optional JSON schema. This is not the database schema! Nothing is generated
@@ -30,10 +29,10 @@ class User extends Model {
         relation: Model.HasManyRelation,
         // The related model. This can be either a Model subclass constructor or an
         // absolute file path to a module that exports one.
-        modelClass: Peak,
+        modelClass: require('./Peak'),
         join: {
-          from: 'User.id',
-          to: 'Peak.ownerId'
+          from: 'user.id',
+          to: 'peak.ownerId'
         }
       },
     };

@@ -3,7 +3,7 @@ const { Model } = require('objection');
 class Peak extends Model {
   // Table name is the only required property.
   static get tableName() {
-    return 'Peak';
+    return 'peaks';
   }
 
   // Optional JSON schema. This is not the database schema! Nothing is generated
@@ -12,14 +12,44 @@ class Peak extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['peakName', 'dateClimbed'],
+      required: [
+        'peakName',
+        'dateClimbed',
+        'imgSrc',
+        'range',
+        'rank',
+        'elevation',
+        'latitude',
+        'longitude'
+      ],
 
       properties: {
         id: { type: 'integer' },
         userId: { type: ['integer', 'null'] },
         peakName: { type: 'string', minLength: 1 },
-        dateClimbed: { type: 'string' },
-        notes: { type: 'string' }
+        dateClimbed: { type: 'date' },
+        notes: { type: 'string' },
+        imgSrc: { type: 'string' },
+        range: { type: 'string' },
+        rank: { type: 'integer' },
+        elevation: { type: 'integer' },
+        latitude: { type: 'float' },
+        longitude: { type: 'float' },
+      }
+    };
+  }
+
+  static get relationMappings() {
+    return {
+      user: {
+        relation: Model.BelongsToOneRelation,
+        // The related model. This can be either a Model subclass constructor or an
+        // absolute file path to a module that exports one.
+        modelClass: require('./User'),
+        join: {
+          from: 'peak.ownerId',
+          to: 'user.id'
+        }
       }
     };
   }
