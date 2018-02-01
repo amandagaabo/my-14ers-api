@@ -12,6 +12,7 @@ exports.list = (req, res) => {
     });
 };
 
+// add new peak
 exports.create = (req, res) => {
   const newPeak = {
     uuid: uuid(),
@@ -32,5 +33,16 @@ exports.create = (req, res) => {
     .insert(newPeak)
     .then((peak) => {
       res.status(201).send(peak);
+    });
+};
+
+// delete one peak
+exports.delete = (req, res) => {
+  return Peak
+    .query()
+    .delete()
+    .where('uuid', req.params.peakId)
+    .then(() => {
+      res.status(204).send({ message: 'peak deleted' });
     });
 };

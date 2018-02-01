@@ -1,9 +1,11 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const Peak = require('../models/Peak');
 const { app, runServer, closeServer } = require('../server');
 const { testPeaks } = require('./test-data');
 
 const { userId } = testPeaks[0];
+const peakId = testPeaks[0].uuid;
 
 const newPeak =
   {
@@ -51,6 +53,8 @@ describe('peak routes', function () {
           res.text.should.contain(userPeaks[0].uuid);
           res.text.should.contain(userPeaks[1].uuid);
           res.text.should.not.contain(testPeaks[2].uuid);
+
+          return Promise.resolve();
         });
     });
   });
@@ -64,6 +68,25 @@ describe('peak routes', function () {
           res.should.have.status(201);
           res.body.peakName.should.equal(newPeak.peak_name);
           res.body.dateClimbed.should.equal(newPeak.dateClimbed);
+          return Promise.resolve();
+        });
+    });
+  });
+
+  describe('DELETE request to /users/:userId/:peakId', function () {
+    it('should remove a peak', function () {
+      return chai.request(app)
+        .delete(`/users/${userId}/${peakId}`)
+        .then((res) => {
+          res.should.have.status(204);
+          return Peak
+            .query()
+            .skipUndefined()
+            .where('userId', userId)
+            .then((peaks) => {
+              peaks.should.not.contain(peakId);
+              return Promise.resolve();
+            });
         });
     });
   });

@@ -12,7 +12,7 @@ const router = express.Router();
 // peak routes
 router.get('/users/:userId/peaks', peaks.list);
 router.post('/users/:userId/peaks', peaks.create);
-// router.delete('/users/:userId/:peakId', peaks.delete);
+router.delete('/users/:userId/:peakId', peaks.delete);
 
 // catch-all endpoint if client makes request to non-existent endpoint
 router.get('*', (req, res) => {
