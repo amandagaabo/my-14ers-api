@@ -1,6 +1,9 @@
 const { Model } = require('objection');
+const bcrypt = require('bcryptjs');
 
-class User extends Model {
+const SALT_WORK_FACTOR = 10;
+
+export default class User extends Model {
   // Table name is the only required property.
   static get tableName() {
     return 'users';
@@ -22,6 +25,14 @@ class User extends Model {
     };
   }
 
+  set password(password) {
+    this.password = bcrypt.hash(password, SALT_WORK_FACTOR);
+  }
+
+  verifyPassword(password) {
+    return bcrypt.compare(password, this.password);
+  }
+
   // // This object defines the relations to other models.
   // static get relationMappings() {
   //   return {
@@ -38,5 +49,3 @@ class User extends Model {
   //   };
   // }
 }
-
-module.exports = User;
