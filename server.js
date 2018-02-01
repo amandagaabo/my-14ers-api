@@ -9,6 +9,8 @@ const { Model } = require('objection');
 const Knex = require('knex');
 const knexConfig = require('./knexfile');
 const pg = require('pg');
+const passport = require('passport');
+const { localStrategy, jwtStrategy } = require('./config/auth');
 
 // change decimal type from string to number
 pg.types.setTypeParser(1700, 'text', parseFloat);
@@ -28,6 +30,11 @@ const app = express()
   .use(cors({ origin: CLIENT_ORIGIN }))
   // router
   .use(router);
+
+// setup auth strategies
+app.use(passport.initialize());
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 // server is used in runServer and closeServer so it is defined out here
 let server;
