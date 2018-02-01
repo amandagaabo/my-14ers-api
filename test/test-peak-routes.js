@@ -50,9 +50,10 @@ describe('peak routes', function () {
         .get(`/users/${userId}/peaks`)
         .then((res) => {
           const userPeaks = testPeaks.filter(peak => peak.userId === userId);
-          res.text.should.contain(userPeaks[0].uuid);
-          res.text.should.contain(userPeaks[1].uuid);
-          res.text.should.not.contain(testPeaks[2].uuid);
+          res.body[0].uuid.should.equal(userPeaks[0].uuid);
+          res.body[1].uuid.should.equal(userPeaks[1].uuid);
+          res.body[0].uuid.should.not.equal(testPeaks[2].uuid);
+          res.body[1].uuid.should.not.equal(testPeaks[2].uuid);
 
           return Promise.resolve();
         });
@@ -78,13 +79,15 @@ describe('peak routes', function () {
       return chai.request(app)
         .delete(`/users/${userId}/${peakId}`)
         .then((res) => {
-          res.should.have.status(204);
+          res.should.have.status(200);
+          res.body.message.should.equal('peak deleted');
           return Peak
             .query()
             .skipUndefined()
             .where('userId', userId)
             .then((peaks) => {
-              peaks.should.not.contain(peakId);
+              const ids = peaks.map(peak => peak.uuid);
+              ids.should.not.include(peakId);
               return Promise.resolve();
             });
         });

@@ -8,7 +8,7 @@ exports.list = (req, res) => {
     .skipUndefined()
     .where('userId', req.params.userId)
     .then((peaks) => {
-      res.send(JSON.stringify(peaks));
+      res.json(peaks);
     });
 };
 
@@ -32,7 +32,7 @@ exports.create = (req, res) => {
     .query()
     .insert(newPeak)
     .then((peak) => {
-      res.status(201).send(peak);
+      res.status(201).json(peak);
     });
 };
 
@@ -43,6 +43,6 @@ exports.delete = (req, res) => {
     .delete()
     .where('uuid', req.params.peakId)
     .then(() => {
-      res.status(204).send({ message: 'peak deleted' });
+      res.status(200).json({ message: 'peak deleted' });
     });
 };
