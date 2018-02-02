@@ -16,7 +16,6 @@ const { localStrategy, jwtStrategy } = require('./config/auth');
 pg.types.setTypeParser(1700, 'text', parseFloat);
 
 // setup database using knex with the current environment
-console.log('node env', process.env.NODE_ENV);
 const knex = Knex(knexConfig[process.env.NODE_ENV]);
 
 // connect to database by binding all models to a knex instance

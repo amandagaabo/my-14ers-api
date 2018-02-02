@@ -9,7 +9,7 @@ const { testUsers } = require('./test-data');
 const should = chai.should();
 chai.use(chaiHttp);
 
-describe.only('Sessions Routes', function () {
+describe('sessions routes', function () {
   before(() => {
     return runServer();
   });
@@ -121,7 +121,7 @@ describe.only('Sessions Routes', function () {
     });
   });
 
-  describe.only('POST requests to /login', function () {
+  describe('POST requests to /login', function () {
     it('should fail with no credentials ', function () {
       const emptyUser =
         {
@@ -180,7 +180,8 @@ describe.only('Sessions Routes', function () {
       const existingUser =
         {
           email: testUsers[0].email,
-          password: testUsers[0].password
+          password: testUsers[0].password,
+          uuid: testUsers[0].uuid
         };
 
       return chai.request(app)
@@ -194,8 +195,98 @@ describe.only('Sessions Routes', function () {
           const payload = jwt.verify(token, JWT_SECRET, {
             algorithm: ['HS256']
           });
-          payload.email.should.equal(existingUser.email);
+          payload.user.email.should.equal(existingUser.email);
+          payload.user.uuid.should.equal(existingUser.uuid);
         });
+    });
+  });
+
+  describe('POST requests to /refresh', () => {
+    const existingUser = {
+      email: testUsers[0].email,
+      uuid: testUsers[0].uuid
+    };
+
+    it('should reject requests with no token', () => {
+      return chai.request(app)
+        .post('/refresh')
+        .then(() => {
+          should.fail(null, null, 'Request should not succeed');
+        })
+        .catch((err) => {
+          err.response.should.have.status(401);
+          err.response.text.should.equal('Unauthorized');
+        });
+    });
+
+    it('should reject requests with token that has an invalid secret', () => {
+      const token = jwt.sign({ user: existingUser }, 'wrongSecret', {
+        subject: existingUser.email,
+        expiresIn: '7d',
+        algorithm: 'HS256'
+      });
+
+      return chai.request(app)
+        .post('/refresh')
+        .set('Authorization', `Bearer ${token}`)
+        .then(() => {
+          should.fail(null, null, 'Request should not succeed');
+        })
+        .catch((err) => {
+          err.response.should.have.status(401);
+          err.response.text.should.equal('Unauthorized');
+        });
+    });
+
+    it('should reject requests with an expired token', () => {
+      const token = jwt.sign({
+        user: existingUser,
+        exp: Math.floor(Date.now() / 1000) - 30 // expired 30s ago
+      },
+      JWT_SECRET, {
+        subject: existingUser.email,
+        algorithm: 'HS256'
+      });
+
+      return chai.request(app)
+        .post('/refresh')
+        .set('authorization', `Bearer ${token}`)
+        .then(() => {
+          should.fail(null, null, 'Request should not succeed');
+        })
+        .catch((err) => {
+          err.response.should.have.status(401);
+          err.response.text.should.equal('Unauthorized');
+        });
+    });
+
+    it('should return a valid auth token with a new expiry date on successful refresh', () => {
+      const token = jwt.sign({ user: existingUser }, JWT_SECRET, {
+        subject: existingUser.email,
+        expiresIn: '7d',
+        algorithm: 'HS256'
+      });
+
+      const decoded = jwt.decode(token);
+
+      return chai.request(app)
+        .post('/refresh')
+        .set('authorization', `Bearer ${token}`)
+        .then((res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          const token = res.body.authToken;
+          token.should.be.a('string');
+          const payload = jwt.verify(token, JWT_SECRET, {
+            algorithm: ['HS256']
+          });
+          payload.user.should.deep.equal({
+            email: existingUser.email,
+            uuid: existingUser.uuid
+          });
+          payload.exp.should.be.at.least(decoded.exp);
+        })
+        .catch(err => console.error(err));
     });
   });
 });

@@ -5,7 +5,7 @@ const uuid = require('uuid/v4');
 
 const createAuthToken = (user) => {
   try {
-    return jwt.sign(user, JWT_SECRET, {
+    return jwt.sign({ user }, JWT_SECRET, {
       subject: user.email,
       expiresIn: JWT_EXPIRY,
       algorithm: 'HS256'
@@ -24,7 +24,10 @@ exports.loginSubmit = (req, res) => {
 };
 
 exports.refreshToken = (req, res) => {
-  const authToken = createAuthToken(req.user);
+  const authToken = createAuthToken({
+    email: req.user.email,
+    uuid: req.user.uuid
+  });
   res.json({ authToken });
 };
 

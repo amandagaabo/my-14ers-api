@@ -10,7 +10,7 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 // session routes
 router.post('/sign-up', sessions.signUpSubmit);
 router.post('/login', localAuth, sessions.loginSubmit);
-// router.post('/refresh', jwtAuth, sessions.refreshToken);
+router.post('/refresh', jwtAuth, sessions.refreshToken);
 
 // peak routes
 router.get('/users/:userId/peaks', peaks.list);
