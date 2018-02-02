@@ -4,15 +4,22 @@ const { JWT_SECRET, JWT_EXPIRY } = require('../config/config');
 const uuid = require('uuid/v4');
 
 const createAuthToken = (user) => {
-  return jwt.sign({ user }, JWT_SECRET, {
-    subject: user.email,
-    expiresIn: JWT_EXPIRY,
-    algorithm: 'HS256'
-  });
+  try {
+    return jwt.sign(user, JWT_SECRET, {
+      subject: user.email,
+      expiresIn: JWT_EXPIRY,
+      algorithm: 'HS256'
+    });
+  } catch (err) {
+    return console.error(err);
+  }
 };
 
 exports.loginSubmit = (req, res) => {
-  const authToken = createAuthToken(req.user);
+  const authToken = createAuthToken({
+    email: req.body.email,
+    uuid: req.body.uuid
+  });
   res.json({ authToken });
 };
 

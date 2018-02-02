@@ -14,17 +14,26 @@ const localStrategy = new LocalStrategy(
 
   function (email, password, callback) {
     let user;
-    User.findOne({ email: email.toLowerCase() })
+
+    return User
+      .query()
+      .where('email', email.toLowerCase())
       .then((_user) => {
         user = _user;
-        if (!user) {
-          return Promise.reject(new Error('Incorrect email or password'));
+        if (user.length === 0) {
+          return Promise.reject({
+            reason: 'LoginError',
+            message: 'Incorrect email or password'
+          });
         }
-        return user.verifyPassword(password);
+        return user[0].verifyPassword(password);
       })
       .then((isValid) => {
         if (!isValid) {
-          return Promise.reject(new Error('Incorrect email or password'));
+          return Promise.reject({
+            reason: 'LoginError',
+            message: 'Incorrect email or password'
+          });
         }
         return callback(null, user);
       })

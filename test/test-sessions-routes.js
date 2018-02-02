@@ -1,6 +1,8 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('./../config/config');
 const { app, runServer, closeServer } = require('../server');
 const { testUsers } = require('./test-data');
 
@@ -26,6 +28,8 @@ describe.only('Sessions Routes', function () {
       return chai.request(app)
         .post('/sign-up')
         .send(missingPW)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
         .catch((err) => {
           err.should.have.status(422);
           err.response.body.message.should.equal('Missing field');
@@ -42,6 +46,8 @@ describe.only('Sessions Routes', function () {
       return chai.request(app)
         .post('/sign-up')
         .send(whitspaceUser)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
         .catch((err) => {
           err.should.have.status(422);
           err.response.body.message.should.equal('Cannot start or end with whitespace');
@@ -58,6 +64,8 @@ describe.only('Sessions Routes', function () {
       return chai.request(app)
         .post('/sign-up')
         .send(shortPW)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
         .catch((err) => {
           err.should.have.status(422);
           err.response.body.message.should.equal('Must be at least 8 characters long');
@@ -74,6 +82,8 @@ describe.only('Sessions Routes', function () {
       return chai.request(app)
         .post('/sign-up')
         .send(existingUser)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
         .catch((err) => {
           err.should.have.status(422);
           err.response.body.message.should.equal('Email already taken');
@@ -111,21 +121,81 @@ describe.only('Sessions Routes', function () {
     });
   });
 
-  // describe('POST requests to /login', function () {
-  //   it('should fail with no credentials ', function () {
-  //     return chai.request(app)
-  //       .post('/login')
-  //       .send({ email: '', password: '' })
-  //       .then(() => {
-  //         should.fail(null, null, 'Request should not succeed');
-  //       })
-  //       .catch((err) => {
-  //         if (err instanceof chai.AssertionError) {
-  //           throw err;
-  //         }
-  //         const res = err.response;
-  //         res.should.have.status(400);
-  //       });
-  //   });
-  // });
+  describe.only('POST requests to /login', function () {
+    it('should fail with no credentials ', function () {
+      const emptyUser =
+        {
+          email: '',
+          password: ''
+        };
+
+      return chai.request(app)
+        .post('/login')
+        .send(emptyUser)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
+        .catch((err) => {
+          err.response.should.have.status(400);
+          err.response.text.should.equal('Bad Request');
+        });
+    });
+
+    it('should fail with incorrect email', () => {
+      const wrongEmail =
+        {
+          email: 'wrong@test.com',
+          password: testUsers[0].password
+        };
+
+      return chai.request(app)
+        .post('/login')
+        .send(wrongEmail)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
+        .catch((err) => {
+          err.response.should.have.status(401);
+          err.response.text.should.equal('Unauthorized');
+        });
+    });
+
+    it('should fail with incorrect password', () => {
+      const wrongPW =
+        {
+          email: testUsers[0].email,
+          password: 'wrongPassword'
+        };
+
+      return chai.request(app)
+        .post('/login')
+        .send(wrongPW)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
+        .catch((err) => {
+          err.response.should.have.status(401);
+          err.response.text.should.equal('Unauthorized');
+        });
+    });
+
+    it('should return a valid auth token on successful login', () => {
+      const existingUser =
+        {
+          email: testUsers[0].email,
+          password: testUsers[0].password
+        };
+
+      return chai.request(app)
+        .post('/login')
+        .send(existingUser)
+        .then((res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          const token = res.body.authToken;
+          token.should.be.a('string');
+          const payload = jwt.verify(token, JWT_SECRET, {
+            algorithm: ['HS256']
+          });
+          payload.email.should.equal(existingUser.email);
+        });
+    });
+  });
 });
