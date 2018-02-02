@@ -16,6 +16,7 @@ const { localStrategy, jwtStrategy } = require('./config/auth');
 pg.types.setTypeParser(1700, 'text', parseFloat);
 
 // setup database using knex with the current environment
+console.log('node env', process.env.NODE_ENV);
 const knex = Knex(knexConfig[process.env.NODE_ENV]);
 
 // connect to database by binding all models to a knex instance
@@ -40,14 +41,28 @@ passport.use(jwtStrategy);
 let server;
 
 function runServer() {
-  return server = app.listen(PORT, () => {
-    console.log(`Your app is listening on port ${PORT}`);
+  return new Promise((resolve, reject) => {
+    server = app.listen(PORT, () => {
+      console.log(`Your app is listening on port ${PORT}`);
+      resolve();
+    })
+      .on('error', (err) => {
+        reject(err);
+      });
   });
 }
 
 // used for integration tests
 function closeServer() {
-  server.close();
+  return new Promise((resolve, reject) => {
+    console.log('Closing server');
+    server.close((err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve();
+    });
+  });
 }
 
 // if server.js is called directly (aka, with `node server.js`), this block runs

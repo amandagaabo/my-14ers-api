@@ -7,7 +7,7 @@
     "migrate:dev": "knex migrate:latest --env development",
     "migrate:test": "knex migrate:latest --env test",
     "seed:dev": "knex seed:run --env development",
-    "seed:test": "knex seed:run --env test",
+    "seed:test": "NODE_ENV=test knex seed:run",
     "test": "npm run seed:test && NODE_ENV=test mocha --recursive --exit",
     "start": "npm run migrate:dev && NODE_ENV=development node server.js",
     "lint": "eslint ./ --ext .js"
