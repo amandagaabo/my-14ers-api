@@ -1,9 +1,9 @@
+const Password = require('objection-password')({
+  password: 'hash'
+});
 const { Model } = require('objection');
-const bcrypt = require('bcryptjs');
 
-const SALT_WORK_FACTOR = 10;
-
-export default class User extends Model {
+class User extends Password(Model) {
   // Table name is the only required property.
   static get tableName() {
     return 'users';
@@ -19,18 +19,10 @@ export default class User extends Model {
 
       properties: {
         uuid: { type: 'uuid' },
-        email: { type: 'string', minLength: 1 },
-        password: { type: 'string', minLength: 8, maxLength: 65 }
+        email: { type: 'string' },
+        password: { type: 'string' }
       }
     };
-  }
-
-  set password(password) {
-    this.password = bcrypt.hash(password, SALT_WORK_FACTOR);
-  }
-
-  verifyPassword(password) {
-    return bcrypt.compare(password, this.password);
   }
 
   // // This object defines the relations to other models.
@@ -49,3 +41,5 @@ export default class User extends Model {
   //   };
   // }
 }
+
+module.exports = User;

@@ -20,7 +20,7 @@ const localStrategy = new LocalStrategy(
         if (!user) {
           return Promise.reject(new Error('Incorrect email or password'));
         }
-        return user.validatePassword(password);
+        return user.verifyPassword(password);
       })
       .then((isValid) => {
         if (!isValid) {
