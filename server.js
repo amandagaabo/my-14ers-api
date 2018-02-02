@@ -4,10 +4,16 @@ const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const router = require('./routes/index');
-const { CLIENT_ORIGIN, PORT } = require('./config');
+const { CLIENT_ORIGIN, PORT } = require('./config/config');
 const { Model } = require('objection');
 const Knex = require('knex');
 const knexConfig = require('./knexfile');
+const pg = require('pg');
+const passport = require('passport');
+const { localStrategy, jwtStrategy } = require('./config/auth');
+
+// change decimal type from string to number
+pg.types.setTypeParser(1700, 'text', parseFloat);
 
 // setup database using knex with the current environment
 const knex = Knex(knexConfig[process.env.NODE_ENV]);
@@ -25,18 +31,37 @@ const app = express()
   // router
   .use(router);
 
+// setup auth strategies
+app.use(passport.initialize());
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
 // server is used in runServer and closeServer so it is defined out here
 let server;
 
 function runServer() {
-  return server = app.listen(PORT, () => {
-    console.log(`Your app is listening on port ${PORT}`);
+  return new Promise((resolve, reject) => {
+    server = app.listen(PORT, () => {
+      console.log(`Your app is listening on port ${PORT}`);
+      resolve();
+    })
+      .on('error', (err) => {
+        reject(err);
+      });
   });
 }
 
 // used for integration tests
 function closeServer() {
-  server.close();
+  return new Promise((resolve, reject) => {
+    console.log('Closing server');
+    server.close((err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve();
+    });
+  });
 }
 
 // if server.js is called directly (aka, with `node server.js`), this block runs

@@ -13,6 +13,8 @@ class Peak extends Model {
     return {
       type: 'object',
       required: [
+        'uuid',
+        'userId',
         'peakName',
         'dateClimbed',
         'imgSrc',
@@ -24,8 +26,8 @@ class Peak extends Model {
       ],
 
       properties: {
-        id: { type: 'integer' },
-        userId: { type: ['integer', 'null'] },
+        uuid: { type: 'uuid' },
+        userId: { type: 'uuid' },
         peakName: { type: 'string', minLength: 1 },
         dateClimbed: { type: 'date' },
         notes: { type: 'string' },
@@ -33,26 +35,26 @@ class Peak extends Model {
         range: { type: 'string' },
         rank: { type: 'integer' },
         elevation: { type: 'integer' },
-        latitude: { type: 'float' },
-        longitude: { type: 'float' },
+        latitude: { type: 'decimal' },
+        longitude: { type: 'decimal' },
       }
     };
   }
 
-  static get relationMappings() {
-    return {
-      user: {
-        relation: Model.BelongsToOneRelation,
-        // The related model. This can be either a Model subclass constructor or an
-        // absolute file path to a module that exports one.
-        modelClass: require('./User'),
-        join: {
-          from: 'peak.ownerId',
-          to: 'user.id'
-        }
-      }
-    };
-  }
+  // static get relationMappings() {
+  //   return {
+  //     user: {
+  //       relation: Model.BelongsToOneRelation,
+  //       // The related model. This can be either a Model subclass constructor or an
+  //       // absolute file path to a module that exports one.
+  //       modelClass: require('./User'),
+  //       join: {
+  //         from: 'peak.userId',
+  //         to: 'user.id'
+  //       }
+  //     }
+  //   };
+  // }
 }
 
 module.exports = Peak;

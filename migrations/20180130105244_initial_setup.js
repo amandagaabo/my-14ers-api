@@ -4,6 +4,7 @@ exports.up = (knex, Promise) => {
       .createTable('users', (table) => {
         table.increments('id').primary();
 
+        table.uuid('uuid').notNull();
         table.string('email').notNull();
         table.string('password').notNull();
       })
@@ -11,7 +12,8 @@ exports.up = (knex, Promise) => {
       .createTable('peaks', (table) => {
         table.increments('id').primary();
 
-        table.integer('userId').notNull();
+        table.uuid('uuid').notNull();
+        table.uuid('userId').notNull();
         table.string('peakName').notNull();
         table.date('dateClimbed').notNull();
         table.string('notes').nullable();
@@ -19,8 +21,8 @@ exports.up = (knex, Promise) => {
         table.string('range').notNull();
         table.integer('rank').notNull();
         table.integer('elevation').notNull();
-        table.float('latitude').notNull();
-        table.float('longitude').notNull();
+        table.decimal('latitude', 12, 8).notNull();
+        table.decimal('longitude', 12, 8).notNull();
       })
   ]);
 };
