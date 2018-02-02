@@ -13,9 +13,9 @@ router.post('/login', localAuth, sessions.loginSubmit);
 router.post('/refresh', jwtAuth, sessions.refreshToken);
 
 // peak routes
-router.get('/users/:userId/peaks', peaks.list);
-router.post('/users/:userId/peaks', peaks.create);
-router.delete('/users/:userId/:peakId', peaks.delete);
+router.get('/users/:userId/peaks', jwtAuth, peaks.list);
+router.post('/users/:userId/peaks', jwtAuth, peaks.create);
+router.delete('/users/:userId/:peakId', jwtAuth, peaks.delete);
 
 // catch-all endpoint if client makes request to non-existent endpoint
 router.get('*', (req, res) => {

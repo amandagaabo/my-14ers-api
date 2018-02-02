@@ -1,11 +1,24 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const Peak = require('../models/Peak');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('./../config/config');
 const { app, runServer, closeServer } = require('../server');
-const { testPeaks } = require('./test-data');
+const { testPeaks, testUsers } = require('./test-data');
 
 const { userId } = testPeaks[0];
 const peakId = testPeaks[0].uuid;
+
+const existingUser = {
+  email: testUsers[0].email,
+  uuid: testUsers[0].uuid
+};
+
+const token = jwt.sign({ user: existingUser }, JWT_SECRET, {
+  subject: existingUser.email,
+  expiresIn: '7d',
+  algorithm: 'HS256'
+});
 
 const newPeak =
   {
@@ -45,9 +58,21 @@ describe('peak routes', function () {
   });
 
   describe('GET request to /users/:userId/peaks', function () {
-    it('should return user peaks', function () {
+    it('should fail without auth token', function () {
       return chai.request(app)
         .get(`/users/${userId}/peaks`)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
+        .catch((err) => {
+          err.response.should.have.status(401);
+          err.response.text.should.equal('Unauthorized');
+        });
+    });
+
+    it('should return user peaks with valid auth token', function () {
+      return chai.request(app)
+        .get(`/users/${userId}/peaks`)
+        .set('authorization', `Bearer ${token}`)
         .then((res) => {
           const userPeaks = testPeaks.filter(peak => peak.userId === userId);
           res.body[0].uuid.should.equal(userPeaks[0].uuid);
@@ -61,9 +86,22 @@ describe('peak routes', function () {
   });
 
   describe('POST request to /users/:userId/peaks', function () {
-    it('should add a new peak', function () {
+    it('should fail without auth token', function () {
       return chai.request(app)
         .post(`/users/${userId}/peaks`)
+        .send(newPeak)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
+        .catch((err) => {
+          err.response.should.have.status(401);
+          err.response.text.should.equal('Unauthorized');
+        });
+    });
+
+    it('should add a new peak with valid auth token', function () {
+      return chai.request(app)
+        .post(`/users/${userId}/peaks`)
+        .set('authorization', `Bearer ${token}`)
         .send(newPeak)
         .then((res) => {
           res.should.have.status(201);
@@ -75,9 +113,21 @@ describe('peak routes', function () {
   });
 
   describe('DELETE request to /users/:userId/:peakId', function () {
-    it('should remove a peak', function () {
+    it('should fail without auth token', function () {
       return chai.request(app)
         .delete(`/users/${userId}/${peakId}`)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
+        .catch((err) => {
+          err.response.should.have.status(401);
+          err.response.text.should.equal('Unauthorized');
+        });
+    });
+
+    it('should remove a peak with valid auth token', function () {
+      return chai.request(app)
+        .delete(`/users/${userId}/${peakId}`)
+        .set('authorization', `Bearer ${token}`)
         .then((res) => {
           res.should.have.status(200);
           res.body.message.should.equal('peak deleted');
