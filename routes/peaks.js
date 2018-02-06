@@ -17,12 +17,12 @@ exports.create = (req, res) => {
   const newPeak = {
     uuid: uuid(),
     userId: req.params.userId,
-    peakName: req.body.peak_name,
+    peakName: req.body.peakName,
     dateClimbed: req.body.dateClimbed,
-    notes: req.body.notes || null,
+    notes: req.body.notes,
     imgSrc: req.body.imgSrc,
     range: req.body.range,
-    rank: req.body.rank,
+    rank: parseInt(req.body.rank, 10),
     elevation: parseInt(req.body.elevation, 10),
     latitude: req.body.latitude,
     longitude: req.body.longitude
