@@ -27,7 +27,7 @@ const newPeak =
     notes: 'yay hiking!',
     imgSrc: 'https://res.cloudinary.com/amhprojects/image/upload/v1514516745/14ers/antero.jpg',
     range: 'Sawatch Range',
-    rank: 10,
+    rank: '10',
     elevation: '14269',
     latitude: '38.67388889',
     longitude: '-106.24611111'

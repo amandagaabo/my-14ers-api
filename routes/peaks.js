@@ -22,7 +22,7 @@ exports.create = (req, res) => {
     notes: req.body.notes,
     imgSrc: req.body.imgSrc,
     range: req.body.range,
-    rank: parseInt(req.body.rank, 10),
+    rank: req.body.rank,
     elevation: parseInt(req.body.elevation, 10),
     latitude: req.body.latitude,
     longitude: req.body.longitude

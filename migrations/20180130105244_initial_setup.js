@@ -19,7 +19,7 @@ exports.up = (knex, Promise) => {
         table.string('notes').nullable();
         table.string('imgSrc').notNull();
         table.string('range').notNull();
-        table.integer('rank').notNull();
+        table.string('rank').notNull();
         table.integer('elevation').notNull();
         table.decimal('latitude', 12, 8).notNull();
         table.decimal('longitude', 12, 8).notNull();
