@@ -33,6 +33,12 @@ const newPeak =
     longitude: '-106.24611111'
   };
 
+const updateInfo =
+  {
+    dateClimbed: '2017-12-25T07:00:00.000Z',
+    notes: 'it was too cold',
+  };
+
 const should = chai.should();
 chai.use(chaiHttp);
 
@@ -107,6 +113,33 @@ describe('peak routes', function () {
           res.should.have.status(201);
           res.body.peakName.should.equal(newPeak.peakName);
           res.body.dateClimbed.should.equal(newPeak.dateClimbed);
+          return Promise.resolve();
+        });
+    });
+  });
+
+  describe('PUT request to /users/:userId/:peakId', function () {
+    it('should fail without auth token', function () {
+      return chai.request(app)
+        .put(`/users/${userId}/${peakId}`)
+        .send(updateInfo)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
+        .catch((err) => {
+          err.response.should.have.status(401);
+          err.response.text.should.equal('Unauthorized');
+        });
+    });
+
+    it('should update peak with valid auth token', function () {
+      return chai.request(app)
+        .put(`/users/${userId}/${peakId}`)
+        .set('authorization', `Bearer ${token}`)
+        .send(updateInfo)
+        .then((res) => {
+          res.should.have.status(200);
+          res.body.dateClimbed.should.equal(updateInfo.dateClimbed);
+          res.body.notes.should.equal(updateInfo.notes);
           return Promise.resolve();
         });
     });

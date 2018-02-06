@@ -15,6 +15,7 @@ router.post('/refresh', jwtAuth, sessions.refreshToken);
 // peak routes
 router.get('/users/:userId/peaks', jwtAuth, peaks.list);
 router.post('/users/:userId/peaks', jwtAuth, peaks.create);
+router.put('/users/:userId/:peakId', jwtAuth, peaks.update);
 router.delete('/users/:userId/:peakId', jwtAuth, peaks.delete);
 
 // catch-all endpoint if client makes request to non-existent endpoint

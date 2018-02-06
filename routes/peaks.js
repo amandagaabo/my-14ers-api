@@ -36,6 +36,25 @@ exports.create = (req, res) => {
     });
 };
 
+// edit peak
+exports.update = (req, res) => {
+  return Peak
+    .query()
+    .patch({
+      dateClimbed: req.body.dateClimbed,
+      notes: req.body.notes
+    })
+    .where('uuid', req.params.peakId)
+    .then(() => {
+      return Peak
+        .query()
+        .where('uuid', req.params.peakId)
+        .then((peak) => {
+          res.status(200).json(peak[0]);
+        });
+    });
+};
+
 // delete one peak
 exports.delete = (req, res) => {
   return Peak
