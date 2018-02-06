@@ -138,7 +138,6 @@ describe('peak routes', function () {
         .send(updateInfo)
         .then((res) => {
           res.should.have.status(200);
-          res.body.dateClimbed.should.equal(updateInfo.dateClimbed);
           res.body.notes.should.equal(updateInfo.notes);
           return Promise.resolve();
         });
