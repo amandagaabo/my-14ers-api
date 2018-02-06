@@ -22,7 +22,7 @@ const token = jwt.sign({ user: existingUser }, JWT_SECRET, {
 
 const newPeak =
   {
-    peak_name: 'Mt. Antero',
+    peakName: 'Mt. Antero',
     dateClimbed: '2018-01-30T06:00:00.000Z',
     notes: 'yay hiking!',
     imgSrc: 'https://res.cloudinary.com/amhprojects/image/upload/v1514516745/14ers/antero.jpg',
@@ -105,7 +105,7 @@ describe('peak routes', function () {
         .send(newPeak)
         .then((res) => {
           res.should.have.status(201);
-          res.body.peakName.should.equal(newPeak.peak_name);
+          res.body.peakName.should.equal(newPeak.peakName);
           res.body.dateClimbed.should.equal(newPeak.dateClimbed);
           return Promise.resolve();
         });

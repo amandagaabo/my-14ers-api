@@ -16,11 +16,25 @@ const createAuthToken = (user) => {
 };
 
 exports.loginSubmit = (req, res) => {
-  const authToken = createAuthToken({
-    email: req.body.email,
-    uuid: req.body.uuid
-  });
-  res.json({ authToken });
+  // get uuid for user
+  return User
+    .query()
+    .skipUndefined()
+    .where('email', req.body.email)
+    .then((user) => {
+      return user[0].uuid;
+    })
+    // create auth token with email and uuid
+    .then((uuid) => {
+      return createAuthToken({
+        email: req.body.email,
+        uuid
+      });
+    })
+    // send authToken
+    .then((authToken) => {
+      res.json({ authToken });
+    });
 };
 
 exports.refreshToken = (req, res) => {
