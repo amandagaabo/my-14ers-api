@@ -22,7 +22,7 @@ exports.create = (req, res) => {
     notes: req.body.notes,
     imgSrc: req.body.imgSrc,
     range: req.body.range,
-    rank: parseInt(req.body.rank, 10),
+    rank: req.body.rank,
     elevation: parseInt(req.body.elevation, 10),
     latitude: req.body.latitude,
     longitude: req.body.longitude
@@ -33,6 +33,25 @@ exports.create = (req, res) => {
     .insert(newPeak)
     .then((peak) => {
       res.status(201).json(peak);
+    });
+};
+
+// edit peak
+exports.update = (req, res) => {
+  return Peak
+    .query()
+    .patch({
+      dateClimbed: req.body.dateClimbed,
+      notes: req.body.notes
+    })
+    .where('uuid', req.params.peakId)
+    .then(() => {
+      return Peak
+        .query()
+        .where('uuid', req.params.peakId)
+        .then((peak) => {
+          res.status(200).json(peak[0]);
+        });
     });
 };
 

@@ -20,7 +20,7 @@ const testPeaks = [
     notes: 'it was fun',
     imgSrc: 'https://res.cloudinary.com/amhprojects/image/upload/v1514516749/14ers/mt_elbert.jpg',
     range: 'Sawatch Range',
-    rank: 1,
+    rank: '1',
     elevation: 14433,
     latitude: 39.11777778,
     longitude: -106.44472222
@@ -33,7 +33,7 @@ const testPeaks = [
     notes: 'very cold',
     imgSrc: 'https://res.cloudinary.com/amhprojects/image/upload/v1514516746/14ers/blanca.jpg',
     range: 'Sangre de Cristo',
-    rank: 4,
+    rank: '4',
     elevation: 14345,
     latitude: 37.57722222,
     longitude: -105.48527778
@@ -46,7 +46,7 @@ const testPeaks = [
     notes: 'it was long',
     imgSrc: 'https://res.cloudinary.com/amhprojects/image/upload/v1514516746/14ers/longs.jpg',
     range: 'RMNP',
-    rank: 4,
+    rank: '4',
     elevation: 14345,
     latitude: 37.57722222,
     longitude: -105.48527778
