@@ -11,7 +11,6 @@
     "seed:test": "NODE_ENV=test knex seed:run",
     "test": "npm run seed:test && NODE_ENV=test mocha --recursive --exit",
     "start:dev": "npm run migrate:dev && NODE_ENV=development node server.js",
-    "postinstall": "npm run migrate:prod",
     "start": "NODE_ENV=production node server.js",
     "lint": "eslint ./ --ext .js"
   },
