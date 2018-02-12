@@ -69,8 +69,7 @@ const facebookStrategy = new FacebookStrategy(
   {
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: `${CLIENT_ORIGIN}/auth/facebook/callback`,
-    profileFields: ['id', 'email']
+    callbackURL: `${CLIENT_ORIGIN}/auth/facebook/callback`
   },
 
   function (accessToken, refreshToken, profile, done) {
