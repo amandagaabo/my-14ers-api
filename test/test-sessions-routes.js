@@ -290,7 +290,7 @@ describe('sessions routes', function () {
     });
   });
 
-  describe.only('POST requests to /auth/facebook', function () {
+  describe('POST requests to /auth/facebook', function () {
     it('should fail with missing Facebook authToken', function () {
       const missingToken =
         {

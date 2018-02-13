@@ -1,5 +1,6 @@
 const Password = require('objection-password')({
-  password: 'hash'
+  password: 'hash',
+  allowEmptyPassword: true
 });
 const { Model } = require('objection');
 
