@@ -20,7 +20,8 @@ class User extends Password(Model) {
       properties: {
         uuid: { type: 'uuid' },
         email: { type: 'string' },
-        password: { type: 'string' }
+        password: { type: 'string' },
+        facebookId: { type: 'string' }
       }
     };
   }
