@@ -15,6 +15,70 @@ const createAuthToken = (user) => {
   }
 };
 
+exports.facebookAuth = (req, res) => {
+  if (!req.body.accessToken) {
+    return res.status(401).json({ message: 'Facebook login error' });
+  }
+
+  const facebookId = req.body.userID;
+  const facebookEmail = req.body.email;
+
+  // search db for user with facebook id
+  return User
+    .query()
+    .where('facebookId', facebookId)
+    .then((user) => {
+      // if no user with facebook id, check email
+      if (user.length === 0) {
+        return User
+          .query()
+          .where('email', facebookEmail)
+          .then((user) => {
+            // if user is found, add facebook id for user then return user
+            if (user.length === 1) {
+              return User
+                .query()
+                .patch({ facebookId })
+                .where('email', facebookEmail)
+                .then(() => {
+                  // find user and return
+                  return User
+                    .query()
+                    .where('email', facebookEmail)
+                    .then((user) => {
+                      return user[0];
+                    });
+                });
+            }
+            // if no user is found, create new user with email and facebook id
+            return User
+              .query()
+              .insert({
+                uuid: uuid(),
+                email: facebookEmail,
+                facebookId
+              })
+              .then((user) => {
+                return user;
+              });
+          });
+      }
+      // return user if user is found
+      return user[0];
+    })
+    // create auth token with email and uuid
+    .then((user) => {
+      return createAuthToken({
+        email: user.email,
+        uuid: user.uuid
+      });
+    })
+    // send authToken
+    .then((authToken) => {
+      res.json({ authToken });
+    });
+};
+
 exports.loginSubmit = (req, res) => {
   // get uuid for user
   return User
