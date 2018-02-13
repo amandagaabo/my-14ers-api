@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 const User = require('./../models/User');
-const { JWT_SECRET, JWT_EXPIRY } = require('../config/config');
+const { JWT_SECRET } = require('../config/config');
 const uuid = require('uuid/v4');
 
 const createAuthToken = (user) => {
   try {
     return jwt.sign({ user }, JWT_SECRET, {
       subject: user.email,
-      expiresIn: JWT_EXPIRY,
+      expiresIn: '7d',
       algorithm: 'HS256'
     });
   } catch (err) {
