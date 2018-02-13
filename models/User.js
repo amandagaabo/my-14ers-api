@@ -1,5 +1,6 @@
 const Password = require('objection-password')({
-  password: 'hash'
+  password: 'hash',
+  allowEmptyPassword: true
 });
 const { Model } = require('objection');
 
@@ -15,12 +16,13 @@ class User extends Password(Model) {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['email', 'password'],
+      required: ['uuid', 'email'],
 
       properties: {
         uuid: { type: 'uuid' },
         email: { type: 'string' },
-        password: { type: 'string' }
+        password: { type: 'string' },
+        facebookId: { type: 'string' }
       }
     };
   }

@@ -1,18 +1,82 @@
 const jwt = require('jsonwebtoken');
 const User = require('./../models/User');
-const { JWT_SECRET, JWT_EXPIRY } = require('../config/config');
+const { JWT_SECRET } = require('../config/config');
 const uuid = require('uuid/v4');
 
 const createAuthToken = (user) => {
   try {
     return jwt.sign({ user }, JWT_SECRET, {
       subject: user.email,
-      expiresIn: JWT_EXPIRY,
+      expiresIn: '7d',
       algorithm: 'HS256'
     });
   } catch (err) {
     return console.error(err);
   }
+};
+
+exports.facebookAuth = (req, res) => {
+  if (!req.body.accessToken) {
+    return res.status(401).json({ message: 'Facebook login error' });
+  }
+
+  const facebookId = req.body.userID;
+  const facebookEmail = req.body.email;
+
+  // search db for user with facebook id
+  return User
+    .query()
+    .where('facebookId', facebookId)
+    .then((user) => {
+      // if no user with facebook id, check email
+      if (user.length === 0) {
+        return User
+          .query()
+          .where('email', facebookEmail)
+          .then((user) => {
+            // if user is found, add facebook id for user then return user
+            if (user.length === 1) {
+              return User
+                .query()
+                .patch({ facebookId })
+                .where('email', facebookEmail)
+                .then(() => {
+                  // find user and return
+                  return User
+                    .query()
+                    .where('email', facebookEmail)
+                    .then((user) => {
+                      return user[0];
+                    });
+                });
+            }
+            // if no user is found, create new user with email and facebook id
+            return User
+              .query()
+              .insert({
+                uuid: uuid(),
+                email: facebookEmail,
+                facebookId
+              })
+              .then((user) => {
+                return user;
+              });
+          });
+      }
+      // return user if user is found
+      return user[0];
+    })
+    // create auth token with email and uuid
+    .then((user) => {
+      return createAuthToken({
+        email: user.email,
+        uuid: user.uuid
+      });
+    })
+    // send authToken
+    .then((authToken) => {
+      res.json({ authToken });
+    });
 };
 
 exports.loginSubmit = (req, res) => {

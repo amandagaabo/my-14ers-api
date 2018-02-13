@@ -6,7 +6,7 @@ exports.up = (knex, Promise) => {
 
         table.uuid('uuid').notNull();
         table.string('email').notNull();
-        table.string('password').notNull();
+        table.string('password').nullable();
       })
 
       .createTable('peaks', (table) => {

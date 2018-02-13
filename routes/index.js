@@ -11,6 +11,7 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 router.post('/sign-up', sessions.signUpSubmit);
 router.post('/login', localAuth, sessions.loginSubmit);
 router.post('/refresh', jwtAuth, sessions.refreshToken);
+router.post('/auth/facebook', sessions.facebookAuth);
 
 // peak routes
 router.get('/users/:userId/peaks', jwtAuth, peaks.list);

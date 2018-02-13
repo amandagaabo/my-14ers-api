@@ -22,7 +22,7 @@ describe('sessions routes', function () {
     it('should fail with missing field', function () {
       const missingPW =
         {
-          email: 'amanda@test.com',
+          email: 'amanda@test.com'
         };
 
       return chai.request(app)
@@ -287,6 +287,137 @@ describe('sessions routes', function () {
           payload.exp.should.be.at.least(decoded.exp);
         })
         .catch(err => console.error(err));
+    });
+  });
+
+  describe('POST requests to /auth/facebook', function () {
+    it('should fail with missing Facebook authToken', function () {
+      const missingToken =
+        {
+          email: 'amanda@test.com',
+          userID: '123'
+        };
+
+      return chai.request(app)
+        .post('/auth/facebook')
+        .send(missingToken)
+        .then(() =>
+          should.fail(null, null, 'Request should not succeed'))
+        .catch((err) => {
+          err.should.have.status(401);
+          err.response.body.message.should.equal('Facebook login error');
+        });
+    });
+
+    it('should return a valid auth token on successful login of existing user without facebookId', function () {
+      const existingUser = {
+        email: testUsers[0].email,
+        uuid: testUsers[0].uuid
+      };
+      const token = jwt.sign({ user: existingUser }, JWT_SECRET, {
+        subject: existingUser.email,
+        expiresIn: '7d',
+        algorithm: 'HS256'
+      });
+      const decoded = jwt.decode(token);
+      const facebookRes =
+        {
+          accessToken: '123',
+          email: existingUser.email,
+          userID: '123'
+        };
+
+      return chai.request(app)
+        .post('/auth/facebook')
+        .send(facebookRes)
+        .then((res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          const token = res.body.authToken;
+          token.should.be.a('string');
+          const payload = jwt.verify(token, JWT_SECRET, {
+            algorithm: ['HS256']
+          });
+          payload.user.should.deep.equal({
+            email: existingUser.email,
+            uuid: existingUser.uuid
+          });
+          payload.exp.should.be.at.least(decoded.exp);
+        });
+    });
+
+    it('should return a valid auth token on successful login of existing user with facebookId', function () {
+      const existingUser = {
+        email: testUsers[1].email,
+        uuid: testUsers[1].uuid,
+        facebookId: testUsers[1].facebookId
+      };
+      const token = jwt.sign({
+        user: { email: existingUser.email, uuid: existingUser.uuid }
+      }, JWT_SECRET, {
+        subject: existingUser.email,
+        expiresIn: '7d',
+        algorithm: 'HS256'
+      });
+      const decoded = jwt.decode(token);
+      const facebookRes =
+        {
+          accessToken: '123',
+          email: existingUser.email,
+          userID: existingUser.facebookId
+        };
+
+      return chai.request(app)
+        .post('/auth/facebook')
+        .send(facebookRes)
+        .then((res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          const token = res.body.authToken;
+          token.should.be.a('string');
+          const payload = jwt.verify(token, JWT_SECRET, {
+            algorithm: ['HS256']
+          });
+          payload.user.should.deep.equal({
+            email: existingUser.email,
+            uuid: existingUser.uuid
+          });
+          payload.exp.should.be.at.least(decoded.exp);
+        });
+    });
+
+    it('should return a valid auth token on successful login of new user', function () {
+      const newUser = {
+        email: 'janedoe@test.com'
+      };
+      const token = jwt.sign({ user: newUser }, JWT_SECRET, {
+        subject: newUser.email,
+        expiresIn: '7d',
+        algorithm: 'HS256'
+      });
+      const decoded = jwt.decode(token);
+      const facebookRes =
+        {
+          accessToken: '456',
+          email: newUser.email,
+          userID: '456'
+        };
+
+      return chai.request(app)
+        .post('/auth/facebook')
+        .send(facebookRes)
+        .then((res) => {
+          res.should.have.status(200);
+          res.body.should.be.an('object');
+          const token = res.body.authToken;
+          token.should.be.a('string');
+          const payload = jwt.verify(token, JWT_SECRET, {
+            algorithm: ['HS256']
+          });
+          payload.user.email.should.deep.equal(newUser.email);
+          payload.user.uuid.should.not.be.null;
+          payload.exp.should.be.at.least(decoded.exp);
+        });
     });
   });
 });
