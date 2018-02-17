@@ -98,7 +98,8 @@ exports.loginSubmit = (req, res) => {
     // send authToken
     .then((authToken) => {
       res.json({ authToken });
-    });
+    })
+    .catch(err => console.error(err))
 };
 
 exports.refreshToken = (req, res) => {

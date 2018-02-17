@@ -10,7 +10,7 @@
     "seed:dev": "knex seed:run --env development",
     "seed:test": "NODE_ENV=test knex seed:run",
     "test": "npm run seed:test && NODE_ENV=test mocha --recursive --exit",
-    "start:dev": "npm run migrate:dev && NODE_ENV=development node server.js",
+    "start:dev": "npm run migrate:dev && NODE_ENV=development nodemon server.js",
     "start": "NODE_ENV=production node server.js",
     "lint": "eslint ./ --ext .js"
   },
@@ -26,6 +26,7 @@
     "jsonwebtoken": "^8.1.1",
     "knex": "^0.14.2",
     "morgan": "^1.9.0",
+    "nodemon": "^1.15.0",
     "objection": "^1.0.0-rc.7",
     "objection-password": "^0.2.0",
     "passport": "^0.4.0",

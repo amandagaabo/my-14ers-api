@@ -22,15 +22,26 @@ const localStrategy = new LocalStrategy(
         user = _user;
         if (user.length === 0) {
           return Promise.reject({
+            code: 401,
             reason: 'LoginError',
             message: 'Incorrect email or password'
           });
         }
+        // if user but no password and has facebook
+        if (user.length === 1 && !user[0].password && user[0].facebookId) {
+          return Promise.reject({
+            code: 400,
+            reason: 'LoginError',
+            message: 'Invalid login, please try logging in with Facebook'
+          });
+        }
+
         return user[0].verifyPassword(password);
       })
       .then((isValid) => {
         if (!isValid) {
           return Promise.reject({
+            code: 401,
             reason: 'LoginError',
             message: 'Incorrect email or password'
           });
