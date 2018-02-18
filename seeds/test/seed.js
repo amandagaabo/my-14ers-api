@@ -26,4 +26,4 @@ exports.seed = function () {
     .then(() => {
       return closeServer();
     });
-};
+}; 
