@@ -29,7 +29,7 @@ class Peak extends Model {
         uuid: { type: 'uuid' },
         userId: { type: 'uuid' },
         peakName: { type: 'string', minLength: 1 },
-        dateClimbed: { type: 'date' },
+        dateClimbed: { type: 'string' },
         notes: { type: 'string' },
         imgSrc: { type: 'string' },
         range: { type: 'string' },
