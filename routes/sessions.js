@@ -99,7 +99,7 @@ exports.loginSubmit = (req, res) => {
     .then((authToken) => {
       res.json({ authToken });
     })
-    .catch(err => console.error(err))
+    .catch(err => console.error(err));
 };
 
 exports.refreshToken = (req, res) => {
