@@ -2,6 +2,8 @@ language: node_js
 node_js: node
 services:
   - postgresql
+before_install:
+  - npm install -g node-gyp
 before_script:
   - psql -c 'create database "my-14ers-test";' -U postgres
   - npm run migrate:test
@@ -12,3 +14,9 @@ deploy:
   app: my14ers-api
   on:
     repo: amandaherschleb/my-14ers-api
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-5
